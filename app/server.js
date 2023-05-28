@@ -1,6 +1,7 @@
 const {default: mongoose} = require('mongoose')
 const http = require('http')
 const path = require('path')
+const {allRoutes} = require("./routes/router");
 
 module.exports = class Application {
     #express = require('express')
@@ -38,7 +39,7 @@ module.exports = class Application {
 
     errorHandler() {
         this.#app.use((req, res, next) => {
-             res.status(404).json({
+            res.status(404).json({
                 status: 404,
                 success: false,
                 message: "آدرس مورد نطر یافت نشد"
@@ -47,7 +48,7 @@ module.exports = class Application {
         this.#app.use((err, req, res, next) => {
             const status = err?.status || 500
             const message = err?.message || "Internal error server"
-             res.status(status).json({
+            res.status(status).json({
                 status,
                 success: false,
                 message
@@ -57,9 +58,17 @@ module.exports = class Application {
 
     createRoutes() {
         this.#app.get("/", (req, res, next) => {
-             res.json({
+            res.json({
                 message: "this is application project manager - created by ali bahrampoor"
             })
         })
+        this.#app.use(allRoutes)
+        // this.#app.use((err, req, res, next) => {
+        //     try {
+        //         this.#app.use(allRoutes)
+        //     } catch (err) {
+        //         next(err)
+        //     }
+        // })
     }
 }
