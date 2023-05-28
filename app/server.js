@@ -2,13 +2,16 @@ const {default: mongoose} = require('mongoose')
 const http = require('http')
 const path = require('path')
 const {allRoutes} = require("./routes/router");
+const dotenv = require('dotenv')
+dotenv.config()
 
 module.exports = class Application {
     #express = require('express')
     #app = this.#express()
+    #DB_URL = process.env.DB_URL
 
-    constructor(PORT, DB_URL) {
-        this.configDataBase(DB_URL)
+    constructor(PORT) {
+        this.configDataBase()
         this.configApplication()
         this.createServer(PORT)
         this.createRoutes()
@@ -29,8 +32,8 @@ module.exports = class Application {
         })
     }
 
-    configDataBase(DB_URL) {
-        mongoose.connect(DB_URL).then(() => {
+    configDataBase() {
+        mongoose.connect(this.#DB_URL).then(() => {
             console.log('connected to mongodb!!')
         }).catch((err) => {
             throw err

@@ -7,7 +7,7 @@ function registerValidator() {
             if (value) {
                 const UsernameRegex = /^[a-z]+[a-z0-9\_\.]{2,}/gi
                 if (UsernameRegex.test(value)) {
-                    const user = await userModel.findOne({username:value})
+                    const user = await userModel.findOne({username: value})
                     if (user) throw 'نام کاربری تکراری میباشد'
                     return true
                 }
@@ -40,6 +40,22 @@ function registerValidator() {
     ]
 }
 
+function loginValidator() {
+    return [
+        body('username').notEmpty().withMessage('نام کاربری نمیتواد خالی باشد').custom(async (username) => {
+            if (username) {
+                const UsernameRegex = /^[a-z]+[a-z0-9\_\.]{2,}/gi
+                if (UsernameRegex.test(username)) {
+                    return true
+                }
+                throw 'نام کاربری صحیح نمیباشد'
+            }
+        }),
+        body('password').isLength({min: 6, max: 16}).withMessage('رمز عبور باید 6 و حداکثر 16 نویسه باشد.')
+    ]
+}
+
 module.exports = {
-    registerValidator
+    registerValidator,
+    loginValidator
 }
