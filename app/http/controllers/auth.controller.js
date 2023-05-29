@@ -40,6 +40,7 @@ class AuthController {
     }
 
     resetPassword() {
+        const {email, password} = req.body
     }
 
 
