@@ -1,4 +1,4 @@
-const {hashPassword, comparePassword} = require("../../modules/function");
+const {hashPassword, comparePassword, signToken} = require("../../modules/function");
 const {userModel} = require("../../models/user");
 
 class AuthController {
@@ -18,6 +18,7 @@ class AuthController {
     }
 
     async login(req, res, next) {
+        console.log(req.headers.authorization)
         try {
             const {username, password} = req.body
             const user = await userModel.findOne({username})
@@ -27,11 +28,14 @@ class AuthController {
                 stauts: 401,
                 message: "نام کاربری یا رمز عبور1 اشتباه میباشد"
             }
+            const token = signToken({username})
+            user.token = token
+            await user.save()
             res.status(200).json({
                 status: 200,
                 success: true,
                 message: "شما با موفقیت وارد حساب کاربری خود شدید",
-                token: ""
+                token
             })
         } catch (err) {
             next(err)
@@ -40,7 +44,7 @@ class AuthController {
     }
 
     resetPassword() {
-        const {email, password} = req.body
+
     }
 
 

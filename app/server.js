@@ -2,8 +2,7 @@ const {default: mongoose} = require('mongoose')
 const http = require('http')
 const path = require('path')
 const {allRoutes} = require("./routes/router");
-const dotenv = require('dotenv')
-dotenv.config()
+
 
 module.exports = class Application {
     #express = require('express')
