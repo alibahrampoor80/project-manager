@@ -18,7 +18,7 @@ class AuthController {
     }
 
     async login(req, res, next) {
-        console.log(req.headers.authorization)
+        // console.log(req.headers.authorization)
         try {
             const {username, password} = req.body
             const user = await userModel.findOne({username})
@@ -30,6 +30,7 @@ class AuthController {
             }
             const token = signToken({username})
             user.token = token
+
             await user.save()
             res.status(200).json({
                 status: 200,
