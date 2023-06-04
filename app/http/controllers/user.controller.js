@@ -12,15 +12,16 @@ class UserController {
 
     async editProfile(req, res, next) {
         try {
-            const data = {...req.body}
+            const data = req.body
             const userId = req.user._id
             Object.entries(data).forEach(([key, value]) => {
                 let field = ["first_name", "last_name", "skills"]
                 let badValues = ["", " ", null, undefined, 0, -1, NaN, {}, []]
                 if (!field.includes(key)) delete data[key]
                 if (badValues.includes(value)) delete data[key]
+
             })
-            console.log(data)
+            // console.log(data)
             const result = await userModel.updateOne({_id: userId}, {$set: data})
             if (result.modifiedCount > 0) {
                 return res.status(200).json({
@@ -34,16 +35,28 @@ class UserController {
         }
     }
 
+    async uploadProfileImage(req, res, next) {
+        try {
+            console.log(req.file)
+        }catch (err){
+            next(err)
+        }
+    }
+
     addSkills() {
+
     }
 
     editSkills() {
+
     }
 
     acceptInviteTeam() {
+
     }
 
     rejectInviteInTeam() {
+
     }
 
 }
