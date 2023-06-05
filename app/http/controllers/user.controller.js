@@ -4,6 +4,7 @@ class UserController {
     async getProfile(req, res, next) {
         try {
             const user = req.user;
+            user.profile_image = req.protocol + "://" + req.get('host') + "/" + (user.profile_image).replace(/[\\\\]/gm , "/")
             res.status(200).json({status: 200, user})
         } catch (err) {
             next(err)
@@ -37,8 +38,18 @@ class UserController {
 
     async uploadProfileImage(req, res, next) {
         try {
-            console.log(req.file)
-        }catch (err){
+            const userId = req.user._id
+            // console.log(req.file)
+
+            const filePath = req.file?.path?.substring(7)
+            const result = await userModel.updateOne({_id: userId}, {
+                $set: {
+                    profile_image: filePath
+                }
+            })
+            if (result.modifiedCount == 0) throw {status: 400, message: "بروزرسانی انجام نشد"}
+            return res.status(200).json({status: 200, message: "بروز رسانی انجام شد"})
+        } catch (err) {
             next(err)
         }
     }

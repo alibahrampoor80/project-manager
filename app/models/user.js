@@ -7,9 +7,10 @@ const userSchema = new mongoose.Schema({
     mobile: {type: String, required: true, unique: true},
     roles: {type: [String], default: ['USER']},
     email: {type: String, required: true, unique: true},
-    password: {type: String, required: true,},
+    password: {type: String, required: true},
     skills: {type: [String], default: []},
     team: {type: [mongoose.Types.ObjectId], default: []},
+    profile_image: {type: String, default: ''},
     token: {type: String, default: ''}
 
 }, {timestamps: true})
