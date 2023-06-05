@@ -1,5 +1,10 @@
 class ProjectController {
-    createProject() {
+    async createProject(req, res, next) {
+        try {
+            const {title, text} = req.body
+        } catch (err) {
+
+        }
     }
 
     getAllProject() {
