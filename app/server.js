@@ -2,12 +2,12 @@ const {default: mongoose} = require('mongoose')
 const http = require('http')
 const path = require('path')
 const {allRoutes} = require("./routes/router");
-
+const morgan = require('morgan')
 
 module.exports = class Application {
     #express = require('express')
     #app = this.#express()
-    #DB_URL = process.env.DB_URL
+    #DB_URL = process.env.DB_URL || 'mongodb+srv://ali_bahrampoor:7St1YjKvE6uDXRNd@cluster0.hnkf9.mongodb.net/projectManager'
 
     constructor(PORT) {
         this.configDataBase()
@@ -15,13 +15,13 @@ module.exports = class Application {
         this.createServer(PORT)
         this.createRoutes()
         this.errorHandler()
-
     }
 
     configApplication() {
         this.#app.use(this.#express.json())
         this.#app.use(this.#express.urlencoded({extended: true}))
         this.#app.use(this.#express.static(path.join(__dirname, "..", "public")))
+        this.#app.use(morgan('dev'))
     }
 
     createServer(PORT) {
@@ -57,6 +57,7 @@ module.exports = class Application {
             })
         })
     }
+
 
     createRoutes() {
         this.#app.get("/", (req, res, next) => {

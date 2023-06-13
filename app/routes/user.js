@@ -9,4 +9,4 @@ router.get('/profile', checkLogin, UserController.getProfile)
 router.post('/edit', checkLogin, UserController.editProfile)
 router.post('/profile-image', checkLogin, uploadMulter.single("image"), UserController.uploadProfileImage)
 
-module.exports = {userRoutes: router}
+module.exports = {  userRoutes: router}
