@@ -21,6 +21,7 @@ module.exports = class Application {
         this.#app.use(this.#express.json())
         this.#app.use(this.#express.urlencoded({extended: true}))
         this.#app.use(this.#express.static(path.join(__dirname, "..", "public")))
+        // this.#app.use(this.#express.)
         this.#app.use(morgan('dev'))
     }
 

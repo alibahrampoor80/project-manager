@@ -8,7 +8,14 @@ const uploadFile = async (req, res, next) => {
             status: 400,
             message: "تصویر شاخص پروژه را ارسال نمایید"
         }
+
+
         let image = req.files.image
+
+        const extensionName = path.extname(image.name)
+        const allowedFormat = ['.png', '.jpg', '.jpeg','.webp'];
+        if (!allowedFormat.includes(extensionName)) throw {status: 400, message: "ارسال عکس مجاز میباشد"}
+
         const imageUrl = path.join(createUploadPath() + Date.now() + path.extname(image.name))
         req.body.image = imageUrl
         let uploadPath = path.join(__dirname, "..", "..", imageUrl)
