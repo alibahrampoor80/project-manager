@@ -13,6 +13,7 @@
   "dependencies": {
     "@types/mongoose": "^5.11.97",
     "@types/node": "^20.2.5",
+    "auto-bind": "^4.0.0",
     "axios": "^1.4.0",
     "bcrypt": "^5.1.0",
     "dotenv": "^16.0.3",

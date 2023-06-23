@@ -59,11 +59,11 @@ module.exports = class Application {
         })
     }
 
-
     createRoutes() {
         this.#app.get("/", (req, res, next) => {
             res.json({
-                message: "this is application project manager - created by ali bahrampoor"
+                message: "this is application project manager - created by ali bahrampoor",
+                swagger_document : "coming soon..."
             })
         })
         this.#app.use(allRoutes)
