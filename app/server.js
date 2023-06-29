@@ -3,7 +3,7 @@ const http = require('http')
 const path = require('path')
 const {allRoutes} = require("./routes/router");
 const morgan = require('morgan')
-
+const cors = require("cors");
 module.exports = class Application {
     #express = require('express')
     #app = this.#express()
@@ -18,6 +18,9 @@ module.exports = class Application {
     }
 
     configApplication() {
+        this.#app.use(
+            cors({credentials: true, origin: process.env.ALLOW_CORS_ORIGIN})
+        );
         this.#app.use(this.#express.json())
         this.#app.use(this.#express.urlencoded({extended: true}))
         this.#app.use(this.#express.static(path.join(__dirname, "..", "public")))

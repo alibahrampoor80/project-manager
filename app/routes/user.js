@@ -8,5 +8,6 @@ const router = require('express').Router()
 router.get('/profile', checkLogin, UserController.getProfile)
 router.post('/edit', checkLogin, UserController.editProfile)
 router.post('/profile-image', checkLogin, uploadMulter.single("image"), UserController.uploadProfileImage)
+router.get('/requests', checkLogin, UserController.getAllRequest)
 
 module.exports = {  userRoutes: router}

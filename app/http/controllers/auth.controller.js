@@ -3,16 +3,23 @@ const {userModel} = require("../../models/user");
 
 class AuthController {
     async register(req, res, next) {
-        const {username, email, password, mobile} = req.body
+
         try {
+            const {username, password, email, mobile} = req.body
             const user = await userModel.create({
                 username,
                 email,
                 password: hashPassword(password),
-                mobile
+                mobile,
             })
-            res.json(user)
+                // .catch(err => {
+                //     if (err?.code == 11000) {
+                //         throw {status: 400, message: "نام کاربری قبلا در سیستم استفاده شده است"}
+                //     }
+                // })
+            return res.status(201).json(user)
         } catch (err) {
+            console.log(err)
             next(err)
         }
     }

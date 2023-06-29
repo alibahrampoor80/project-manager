@@ -12,8 +12,9 @@ function registerValidator() {
                     return true
                 }
                 throw 'نام کاربری صحیح نمیباشد'
+            } else {
+                throw "نام کاربری نمیتواند خالی باشد"
             }
-            throw 'نام کاربری نمیتواد خالی باشد'
         }),
         body('email').isEmail().withMessage('ایمیل وارد شده صحیح نمیباشد')
             .custom(async (email) => {
@@ -24,6 +25,7 @@ function registerValidator() {
         ,
         body('mobile').isMobilePhone('fa-IR').withMessage('شماره موبایل وارد شده صحیح نمیباشد')
             .custom(async (mobile) => {
+
                 const user = await userModel.findOne({mobile})
                 if (user) throw 'موبایل تکراری میباشد'
                 return true

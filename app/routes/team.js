@@ -8,6 +8,7 @@ const router = require('express').Router()
 router.post('/create', checkLogin, createTeamValidator(), ExpressValidatorMapper, TeamController.createTeam)
 router.get('/list', checkLogin, TeamController.getListOfTeam)
 router.get('/me', checkLogin, TeamController.getMyTeams)
+router.get('/invite/:teamId/:username', checkLogin, TeamController.inviteUserToTeam)
 router.get('/:id', checkLogin, mongoIDValidator(), ExpressValidatorMapper, TeamController.getTeamById)
 router.delete('/remove/:id', checkLogin, mongoIDValidator(), ExpressValidatorMapper, TeamController.removeTeamById)
 

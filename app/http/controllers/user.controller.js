@@ -5,7 +5,7 @@ class UserController {
     async getProfile(req, res, next) {
         try {
             const user = req.user;
-            user.profile_image = createLinkForFiles(user.profile_image,req)
+            user.profile_image = createLinkForFiles(user.profile_image, req)
             res.status(200).json({status: 200, user})
         } catch (err) {
             next(err)
@@ -50,6 +50,43 @@ class UserController {
             })
             if (result.modifiedCount == 0) throw {status: 400, message: "بروزرسانی انجام نشد"}
             return res.status(200).json({status: 200, message: "بروز رسانی انجام شد"})
+        } catch (err) {
+            next(err)
+        }
+    }
+
+    async getAllRequest(req, res, next) {
+        try {
+            const userId = req.user._id
+
+            const {inviteRequests} = await userModel.findOne({_id: userId}, {inviteRequests: 1})
+            return res.json({
+                requests: inviteRequests || []
+            })
+        } catch (err) {
+            next(err)
+        }
+    }
+
+    async getPendingRequests(req, res, next) {
+        try {
+
+        } catch (err) {
+            next(err)
+        }
+    }
+
+    async getAcceptedRequests(req, res, next) {
+        try {
+
+        } catch (err) {
+            next(err)
+        }
+    }
+
+    async getRejectedRequests(req, res, next) {
+        try {
+
         } catch (err) {
             next(err)
         }

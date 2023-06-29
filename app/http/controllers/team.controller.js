@@ -1,4 +1,5 @@
 const {teamModel} = require("../../models/team");
+const {userModel} = require("../../models/user");
 
 class TeamController {
     async createTeam(req, res, next) {
@@ -83,6 +84,37 @@ class TeamController {
 
     async inviteUserToTeam(req, res, next) {
         try {
+            const {username, teamId} = req.params
+            const userId = req.user._id
+            const team = await teamModel.findOne({
+                $or: [{owner: userId}, {users: userId}],
+                _id: teamId
+            })
+            if (!team) throw {status: 400, message: "تیمی جهت دعوت کردن افراد یافت نشد!"}
+            const user = await userModel.findOne({username})
+            if (!user) throw {status: 400, message: "کاربر مورد نظر جهت دعوت به تیم یافت نشد"}
+
+            const userInvited = await teamModel.findOne({
+                $or: [{owner: user._id}, {users: user._id}],
+                _id: teamId
+            })
+            if (userInvited) throw {status: 400, message: "کاربر مورد نظر قبلا به تیم دعوت شده است!"}
+
+            const request = {
+                caller: req.user.username,
+                requestDate: new Date(),
+                teamId,
+                status: "pending"
+            }
+            const updateUserResult = await userModel.updateOne({username}, {
+                $push: {inviteRequests: request}
+            })
+            if (updateUserResult.modifiedCount == 0) throw {status: 500, message: "ثبت درخواست دعوت ثبت نشد!"}
+
+            return res.status(200).json({
+                status: 200,
+                message: "ثبت درخواست با موفقیت ایجاد شد!"
+            })
 
         } catch (err) {
             next(err)
