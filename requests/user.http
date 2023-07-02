@@ -14,12 +14,12 @@ Content-Type: application/json
 }
 
 ### get all  User requests
-get http://localhost:5000/user/requests
+GET http://localhost:5000/user/requests
 Authorization: Bearer {{$dotenv token}}
 Content-Type: application/json
 
 ### get accepted User requests
-get http://localhost:3000/user/requests/accepted
+GET http://localhost:5000/user/requests/accepted
 Authorization: Bearer {{$dotenv token}}
 Content-Type: application/json
 

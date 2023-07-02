@@ -68,6 +68,40 @@ class UserController {
         }
     }
 
+    async getRequestsByStatus(req, res, next) {
+        try {
+            const status = req.params.status
+            const userId = req.user._id
+            const requests = await userModel.aggregate([
+                {
+                    $match: {_id: userId}
+                },
+                {
+                    $project: {
+                        inviteRequests: 1,
+                        _id: 0,
+                        inviteRequests: {
+                            $filter: {
+                                input: "$inviteRequests",
+                                as: 'request',
+                                cond: {
+                                    $eq: ["$$request.status", status]
+                                }
+                            }
+                        }
+                    }
+                }
+            ])
+
+            return res.status(200).json({
+                status: 200,
+                requests: requests?.[0].inviteRequests || []
+            })
+        } catch (err) {
+            next(err)
+        }
+    }
+
     async getPendingRequests(req, res, next) {
         try {
 
