@@ -10,5 +10,6 @@ router.post('/edit', checkLogin, UserController.editProfile)
 router.post('/profile-image', checkLogin, uploadMulter.single("image"), UserController.uploadProfileImage)
 router.get('/requests', checkLogin, UserController.getAllRequest)
 router.get('/requests/:status', checkLogin, UserController.getRequestsByStatus)
+router.get('/change-status-request/:id/:status', checkLogin, UserController.changeStatusRequest)
 
 module.exports = {  userRoutes: router}

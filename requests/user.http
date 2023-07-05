@@ -3,7 +3,7 @@ GET http://localhost:5000/user/profile
 Authorization: Bearer {{$dotenv token}}
 
 ### edit User Profile
-Post http://localhost:5000/user/profile
+POST http://localhost:5000/user/profile
 Authorization: Bearer {{$dotenv token}}
 Content-Type: application/json
 
@@ -24,6 +24,6 @@ Authorization: Bearer {{$dotenv token}}
 Content-Type: application/json
 
 ### accepted requests
-get http://localhost:3000/user/change-status-request/6234760cae461107a2feeefc/rejected
+GET http://localhost:3000/user/change-status-request/6234760cae461107a2feeefc/rejected
 Authorization: Bearer {{$dotenv token}}
 Content-Type: application/json
