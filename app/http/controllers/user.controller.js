@@ -60,9 +60,39 @@ class UserController {
         try {
             const userId = req.user._id
 
-            const {inviteRequests} = await userModel.findOne({_id: userId}, {inviteRequests: 1})
+            const inviteRequests = await userModel.aggregate([
+                {
+                    $match: {
+                        _id: userId
+                    }
+                },
+                // {
+                //     $project: {inviteRequests: 1}
+                // },
+                {
+                    $lookup: {
+                        from: "users",
+                        localField: "inviteRequests.caller",
+                        foreignField: "username",
+                        as: "callerInfo"
+                    }
+                },
+                {
+                    $project: {
+                        "owner.roles": 0,
+                        "owner.password": 0,
+                        "owner.token": 0,
+                        "owner.teams": 0,
+                        "owner.inviteRequests": 0,
+                        "owner.skills": 0,
+                        "__v": 0,
+                        "updatedAt": 0,
+                        "createdAt": 0,
+                    }
+                },
+            ])
             return res.json({
-                requests: inviteRequests || []
+                requests: inviteRequests
             })
         } catch (err) {
             next(err)
@@ -131,18 +161,11 @@ class UserController {
     }
 
 
-
-
     addSkills() {
 
     }
 
     editSkills() {
-
-    }
-
-
-    rejectInviteInTeam() {
 
     }
 
