@@ -124,8 +124,7 @@ class TeamController {
 
     async updateTeam(req, res, next) {
         try {
-            console.log(req.body);
-            const data = {...req.body};
+            const data = {...req.body}
             Object.keys(data).forEach((key) => {
                 if (!data[key]) delete data[key];
                 if (["", " ", undefined, null, NaN].includes(data[key]))
