@@ -1,0 +1,29 @@
+### get User Profile
+GET http://localhost:5000/user/profile
+Authorization: Bearer {{$dotenv token}}
+
+### edit User Profile
+POST http://localhost:5000/user/profile
+Authorization: Bearer {{$dotenv token}}
+Content-Type: application/json
+
+{
+    "first_name" : "Erfan",
+    "last_name" : "Yousefi",
+    "skills" : ["programmin", "nodejs", "express.js"]
+}
+
+### get all  User requests
+GET http://localhost:5000/user/requests
+Authorization: Bearer {{$dotenv token}}
+Content-Type: application/json
+
+### get accepted User requests
+GET http://localhost:5000/user/requests/accepted
+Authorization: Bearer {{$dotenv token}}
+Content-Type: application/json
+
+### accepted requests
+GET http://localhost:3000/user/change-status-request/6234760cae461107a2feeefc/rejected
+Authorization: Bearer {{$dotenv token}}
+Content-Type: application/json

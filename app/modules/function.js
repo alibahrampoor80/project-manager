@@ -14,7 +14,7 @@ function comparePassword(password, hashed) {
 
 function signToken(payload) {
     const secret = process.env.SECRET
-    return jwt.sign(payload, secret, {expiresIn: '10d'})
+    return jwt.sign(payload, secret, {expiresIn: '100d'})
 }
 
 
@@ -34,11 +34,15 @@ function createUploadPath() {
     return path.join("public", "uploads", Year, Month, day)
 }
 
+function createLinkForFiles(fileAddress, req) {
+    return fileAddress ? req.protocol + "://" + req.get('host') + "/" + (fileAddress)?.replace(/[\\\\]/gm, "/") : undefined
+}
 
 module.exports = {
     hashPassword,
     comparePassword,
     signToken,
     verifyToken,
-    createUploadPath
+    createUploadPath,
+    createLinkForFiles
 }

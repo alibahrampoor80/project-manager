@@ -1,11 +1,12 @@
 const {userModel} = require("../../models/user");
+const {createLinkForFiles} = require("../../modules/function");
+const {teamModel} = require("../../models/team");
 
 class UserController {
     async getProfile(req, res, next) {
         try {
             const user = req.user;
-            user.profile_image = req.protocol + "://" + req.get('host') + "/" + (user.profile_image)
-                .replace(/[\\\\]/gm , "/")
+            user.profile_image = createLinkForFiles(user.profile_image, req)
             res.status(200).json({status: 200, user})
         } catch (err) {
             next(err)
@@ -55,19 +56,125 @@ class UserController {
         }
     }
 
+    async getAllRequest(req, res, next) {
+        try {
+            const userId = req.user._id
+
+            const inviteRequests = await userModel.aggregate([
+                {
+                    $match: {
+                        _id: userId
+                    }
+                },
+                // {
+                //     $project: {inviteRequests: 1}
+                // },
+                {
+                    $lookup: {
+                        from: "users",
+                        localField: "inviteRequests.caller",
+                        foreignField: "username",
+                        as: "callerInfo"
+                    }
+                },
+                {
+                    $project: {
+                        "requests.password": 0,
+                        "requests.token": 0,
+                        "requests.teams": 0,
+                        "requests.inviteRequests": 0,
+                        "requests.skills": 0,
+                        "callerInfo.roles": 0,
+                        "callerInfo.password": 0,
+                        "callerInfo.token": 0,
+                        "callerInfo.teams": 0,
+                        "callerInfo.inviteRequests": 0,
+                        "callerInfo.skills": 0,
+                        "requests.roles": 0,
+                        "__v": 0,
+                        "updatedAt": 0,
+                        "createdAt": 0,
+                    }
+                },
+                // {
+                //     $unwind: "$owner"
+                // }
+            ])
+            return res.json({
+                requests: inviteRequests
+            })
+        } catch (err) {
+            next(err)
+        }
+    }
+
+    async getRequestsByStatus(req, res, next) {
+        try {
+            const status = req.params.status
+            const userId = req.user._id
+            const requests = await userModel.aggregate([
+                {
+                    $match: {_id: userId}
+                },
+                {
+                    $project: {
+                        inviteRequests: 1,
+                        _id: 0,
+                        inviteRequests: {
+                            $filter: {
+                                input: "$inviteRequests",
+                                as: 'request',
+                                cond: {
+                                    $eq: ["$$request.status", status]
+                                }
+                            }
+                        }
+                    }
+                }
+            ])
+
+            return res.status(200).json({
+                status: 200,
+                requests: requests?.[0].inviteRequests || []
+            })
+        } catch (err) {
+            next(err)
+        }
+    }
+
+    async changeStatusRequest(req, res, next) {
+        try {
+            const {id, status} = req.params
+            // console.log(status, id)
+            const request = await userModel.findOne({"inviteRequests._id": id})
+            if (!request) throw {status: 404, message: "درخواستی با این مشخصات یافت نشد!"}
+            const findRequest = request.inviteRequests.find(item => item.id == id)
+            if (findRequest.status != "pending") throw {status: 400, message: "این درخواست قبلا رد یا پذیرفته شده است"}
+            if (!["accepted", "rejected"].includes(status)) throw {
+                status: 400,
+                message: "اطلاعات ارسال شده صحیح نمیباشد"
+            }
+            const updateResult = await userModel.updateOne({"inviteRequests._id": id},
+                {
+                    $set: {"inviteRequests.$.status": status}
+                })
+            if (updateResult.modifiedCount == 0) throw {status: 500, message: "تغییر وضعیت درخواست انجام نشد"}
+            return res.status(200).json({
+                status: 200,
+                message: "تغییر وضعیت درخواست با موفیقت انجام شد"
+            })
+        } catch (err) {
+            next(err)
+        }
+
+    }
+
+
     addSkills() {
 
     }
 
     editSkills() {
-
-    }
-
-    acceptInviteTeam() {
-
-    }
-
-    rejectInviteInTeam() {
 
     }
 
