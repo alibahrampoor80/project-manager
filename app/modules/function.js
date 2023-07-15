@@ -14,7 +14,7 @@ function comparePassword(password, hashed) {
 
 function signToken(payload) {
     const secret = process.env.SECRET
-    return jwt.sign(payload, secret, {expiresIn: '10d'})
+    return jwt.sign(payload, secret, {expiresIn: '100d'})
 }
 
 

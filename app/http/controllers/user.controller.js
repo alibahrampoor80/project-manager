@@ -79,17 +79,26 @@ class UserController {
                 },
                 {
                     $project: {
-                        "owner.roles": 0,
-                        "owner.password": 0,
-                        "owner.token": 0,
-                        "owner.teams": 0,
-                        "owner.inviteRequests": 0,
-                        "owner.skills": 0,
+                        "requests.password": 0,
+                        "requests.token": 0,
+                        "requests.teams": 0,
+                        "requests.inviteRequests": 0,
+                        "requests.skills": 0,
+                        "callerInfo.roles": 0,
+                        "callerInfo.password": 0,
+                        "callerInfo.token": 0,
+                        "callerInfo.teams": 0,
+                        "callerInfo.inviteRequests": 0,
+                        "callerInfo.skills": 0,
+                        "requests.roles": 0,
                         "__v": 0,
                         "updatedAt": 0,
                         "createdAt": 0,
                     }
                 },
+                // {
+                //     $unwind: "$owner"
+                // }
             ])
             return res.json({
                 requests: inviteRequests
