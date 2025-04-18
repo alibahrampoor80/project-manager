@@ -4,6 +4,9 @@ const path = require('path')
 const {allRoutes} = require("./routes/router");
 const morgan = require('morgan')
 const cors = require("cors");
+const swaggerUi = require('swagger-ui-express')
+const swaggerDocument = require('../swagger')
+
 module.exports = class Application {
     #express = require('express')
     #app = this.#express()
@@ -21,6 +24,8 @@ module.exports = class Application {
         this.#app.use(
             cors({credentials: true, origin: process.env.ALLOW_CORS_ORIGIN})
         );
+        this.#app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
         this.#app.use(this.#express.json())
         this.#app.use(this.#express.urlencoded({extended: true}))
         this.#app.use(this.#express.static(path.join(__dirname, "..", "public")))
@@ -66,7 +71,7 @@ module.exports = class Application {
         this.#app.get("/", (req, res, next) => {
             res.json({
                 message: "this is application project manager - created by ali bahrampoor",
-                swagger_document : "coming soon..."
+                swagger_document: "coming soon..."
             })
         })
         this.#app.use(allRoutes)

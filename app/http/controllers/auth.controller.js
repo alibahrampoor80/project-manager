@@ -12,12 +12,16 @@ class AuthController {
                 password: hashPassword(password),
                 mobile,
             })
-                // .catch(err => {
-                //     if (err?.code == 11000) {
-                //         throw {status: 400, message: "نام کاربری قبلا در سیستم استفاده شده است"}
-                //     }
-                // })
-            return res.status(201).json(user)
+            // .catch(err => {
+            //     if (err?.code == 11000) {
+            //         throw {status: 400, message: "نام کاربری قبلا در سیستم استفاده شده است"}
+            //     }
+            // })
+            return res.status(201).json({
+                success: true,
+                message: "ثبت نام با موفقیت انجام شد",
+                user
+            })
         } catch (err) {
             console.log(err)
             next(err)
